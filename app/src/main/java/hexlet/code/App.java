@@ -1,11 +1,16 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Command(name = "gendiff",
         mixinStandardHelpOptions = true,
@@ -13,7 +18,7 @@ import java.io.File;
         description = "Compares two configuration files and shows a difference."
 )
 
-public class App implements Runnable{
+public class App implements Callable {
 
     @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
     private String format = "stylish";
@@ -35,15 +40,26 @@ public class App implements Runnable{
         System.exit(exitCode);
     }
 
-
     @Override
-    public void run() {
+    public Object call() throws Exception {
+        Map<String, Object> dataFile1 = null;
+        Map<String, Object> dataFile2 = null;
         if (helpRequested) {
             CommandLine.usage(this, System.out);
-            return;
         } else if (versionRequested) {
             System.out.println("Version 1.0");
-            return;
+        } else {
+            ObjectMapper mapper = new ObjectMapper();
+            File fileObj1 = new File(filePath1);
+            File fileObj2 = new File(filePath2);
+            try {
+                dataFile1 = mapper.readValue(fileObj1, new TypeReference<Map<String, Object>>() {});
+                dataFile2 = mapper.readValue(fileObj2, new TypeReference<Map<String, Object>>() {});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Differ.generate(dataFile1, dataFile2);
         }
+        return null;
     }
 }
