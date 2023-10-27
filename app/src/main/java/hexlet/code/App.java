@@ -8,7 +8,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -53,8 +52,10 @@ public class App implements Callable {
             File fileObj1 = new File(filePath1);
             File fileObj2 = new File(filePath2);
             try {
-                dataFile1 = mapper.readValue(fileObj1, new TypeReference<Map<String, Object>>() {});
-                dataFile2 = mapper.readValue(fileObj2, new TypeReference<Map<String, Object>>() {});
+                dataFile1 = mapper.readValue(fileObj1, new TypeReference<Map<String, Object>>() {
+                });
+                dataFile2 = mapper.readValue(fileObj2, new TypeReference<Map<String, Object>>() {
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }

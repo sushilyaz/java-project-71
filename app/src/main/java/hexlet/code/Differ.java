@@ -1,7 +1,11 @@
 package hexlet.code;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Differ {
     public static void generate(Map<String, Object> dataFile1, Map<String, Object> dataFile2) {
