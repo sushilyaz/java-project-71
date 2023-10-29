@@ -1,5 +1,9 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,7 +12,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Differ {
-    public static void generate(Map<String, Object> dataFile1, Map<String, Object> dataFile2) {
+    public static String generate(String filePath1, String filePath2) {
+
+        Map<String, Object> dataFile1 = null;
+        Map<String, Object> dataFile2 = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+        File fileObj1 = new File(filePath1);
+        File fileObj2 = new File(filePath2);
+        try {
+            dataFile1 = mapper.readValue(fileObj1, new TypeReference<Map<String, Object>>() {
+            });
+            dataFile2 = mapper.readValue(fileObj2, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<String> allKeys = new ArrayList<>();
         allKeys.addAll(dataFile1.keySet());
         allKeys.addAll(dataFile2.keySet());
@@ -38,6 +58,6 @@ public class Differ {
         }
         diff.append("\n");
         diff.append("}");
-        System.out.println(diff.toString());
+        return diff.toString();
     }
 }
