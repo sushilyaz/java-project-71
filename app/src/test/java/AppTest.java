@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
-    private static final String PATH1 = "src/test/resources/stylish1.json";
-    private static final String PATH2 = "src/test/resources/stylish2.json";
+    private static final String PATH1 = "stylish1.json";
+    private static final String PATH2 = "stylish2.json";
     private static String stylish;
 
     @Test
