@@ -43,7 +43,7 @@ public class App implements Callable {
             System.out.println("Version 1.0");
             return null;
         } else {
-            System.out.println(Differ.generate(filepath1, filepath2));
+            System.out.println(Differ.generate(filepath1, filepath2, format));
         }
         return null;
     }

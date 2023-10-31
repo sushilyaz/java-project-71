@@ -1,11 +1,5 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -15,26 +9,20 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class Differ {
-    public static String generate(String filepath1, String filepath2) throws Exception {
-        Path path1 = Paths.get(filepath1).toAbsolutePath().normalize();
-        Path path2 = Paths.get(filepath2).toAbsolutePath().normalize();
-        String pathStr1 = Files.readString(path1);
-        String pathStr2 = Files.readString(path2);
-
+    public static String generate(String filepath1, String filepath2, String format) throws Exception {
         Map<String, Object> dataFile1 = null;
         Map<String, Object> dataFile2 = null;
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            dataFile1 = mapper.readValue(pathStr1, new TypeReference<Map<String, Object>>() {
-            });
-            dataFile2 = mapper.readValue(pathStr2, new TypeReference<Map<String, Object>>() {
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+        String[] splitFilepaths = filepath1.split("\\.");
+        String extension = splitFilepaths[1];
+        List<Map<String, Object>> parseFiles = new ArrayList<>();
+        if (extension.equals("json")) {
+            parseFiles = Parser.parseJSON(filepath1, filepath2);
+        } else if (extension.equals("yaml")) {
+            parseFiles = Parser.parseYAML(filepath1, filepath2);
         }
 
+        dataFile1 = parseFiles.get(0);
+        dataFile2 = parseFiles.get(1);
         List<String> allKeys = new ArrayList<>();
         allKeys.addAll(dataFile1.keySet());
         allKeys.addAll(dataFile2.keySet());

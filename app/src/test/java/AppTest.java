@@ -8,19 +8,28 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
-    private static String stylish;
-    private static final String ABSOLUTE_PATH_1 = "src/test/resources/file1.json";
-    private static final String ABSOLUTE_PATH_2 = "src/test/resources/file2.json";
+    private static String resultStylish;
+    private static final String JSON_PATH_1 = "src/test/resources/file1.json";
+    private static final String JSON_PATH_2 = "src/test/resources/file2.json";
+    private static final String YAML_PATH_1 = "src/test/resources/file1.yaml";
+    private static final String YAML_PATH_2 = "src/test/resources/file2.yaml";
 
     @BeforeAll
     public static void getResult() throws Exception {
-        stylish = Files.readString(Paths.get("src/test/resources/ResultJSON").toAbsolutePath().normalize());
+        resultStylish = Files.readString(Paths.get("src/test/resources/ResultJSON").toAbsolutePath().normalize());
     }
 
     @Test
     public void testStylishJson() throws Exception {
-        String expected = stylish;
-        String actual = Differ.generate(ABSOLUTE_PATH_1, ABSOLUTE_PATH_2);
+        String expected = resultStylish;
+        String actual = Differ.generate(JSON_PATH_1, JSON_PATH_2, "stylish");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testStylishYaml() throws Exception {
+        String expected = resultStylish;
+        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "stylish");
         assertEquals(expected, actual);
     }
 }
