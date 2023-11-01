@@ -1,72 +1,74 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Collections;
+import java.util.Objects;
 
 public class Differ {
-    public static String generate(String filePath1, String filePath2) throws Exception {
-
+    public static String generate(String filepath1, String filepath2, String format) throws Exception {
         Map<String, Object> dataFile1 = null;
         Map<String, Object> dataFile2 = null;
-        Path path1 = Paths.get(filePath1).toAbsolutePath().normalize();
-        Path path2 = Paths.get(filePath2).toAbsolutePath().normalize();
-        String path1Str = Files.readString(path1);
-        String path2Str = Files.readString(path2);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-        File fileObj1 = new File(path1Str);
-        File fileObj2 = new File(path2Str);
-        try {
-            dataFile1 = mapper.readValue(fileObj1, new TypeReference<Map<String, Object>>() {
-            });
-            dataFile2 = mapper.readValue(fileObj2, new TypeReference<Map<String, Object>>() {
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+        String[] splitFilepaths = filepath1.split("\\.");
+        String extension = splitFilepaths[1];
+        List<Map<String, Object>> parseFiles = new ArrayList<>();
+        if (extension.equals("json")) {
+            parseFiles = Parser.parseJSON(filepath1, filepath2);
+        } else if (extension.equals("yaml")) {
+            parseFiles = Parser.parseYAML(filepath1, filepath2);
         }
-
+        dataFile1 = parseFiles.get(0);
+        dataFile2 = parseFiles.get(1);
         List<String> allKeys = new ArrayList<>();
         allKeys.addAll(dataFile1.keySet());
         allKeys.addAll(dataFile2.keySet());
         Set<String> set = new HashSet<>(allKeys);
         List<String> allKeysSet = new ArrayList<>(set);
         Collections.sort(allKeysSet);
-        StringBuilder diff = new StringBuilder();
-        diff.append("{");
+
+        List<DifferElement> diff = new ArrayList<>();
         for (String key : allKeysSet) {
-            Object value1 = dataFile1.get(key);
-            Object value2 = dataFile2.get(key);
-            if (value1 == null) {
-                diff.append("\n");
-                diff.append("+ " + key + ": " + value2);
-            } else if (value2 == null) {
-                diff.append("\n");
-                diff.append("- " + key + ": " + value1);
-            } else if (!value1.equals(value2)) {
-                diff.append("\n");
-                diff.append("- " + key + ": " + value1);
-                diff.append("\n");
-                diff.append("+ " + key + ": " + value2);
-            } else if (value1.equals(value2)) {
-                diff.append("\n");
-                diff.append("  " + key + ": " + value2);
-            }
+            DifferElement el = addElement(dataFile1, dataFile2, key);
+            diff.add(el);
         }
-        diff.append("\n");
-        diff.append("}");
-        return diff.toString();
+        String result = Formatter.solution(diff, format);
+        return result;
+    }
+
+    private static DifferElement addElement(Map<String, Object> dataFile1, Map<String, Object> dataFile2, String key) {
+        Object value1 = dataFile1.get(key);
+        Object value2 = dataFile2.get(key);
+        boolean elementRemoved = dataFile1.containsKey(key) && !dataFile2.containsKey(key);
+        boolean elementAdded = !dataFile1.containsKey(key) && dataFile2.containsKey(key);
+        boolean elementEqual = Objects.equals(value1, value2);
+        if (elementRemoved) {
+            return DifferElement.builder()
+                    .withChange("removed")
+                    .withKey(key)
+                    .withValueOld(value1)
+                    .build();
+        } else if (elementAdded) {
+            return DifferElement.builder()
+                    .withChange("added")
+                    .withKey(key)
+                    .withValueNew(value2)
+                    .build();
+        } else if (!elementEqual) {
+            return DifferElement.builder()
+                    .withChange("update")
+                    .withKey(key)
+                    .withValueOld(value1)
+                    .withValueNew(value2)
+                    .build();
+        } else {
+            return DifferElement.builder()
+                    .withChange("same")
+                    .withKey(key)
+                    .withValue(value1)
+                    .build();
+        }
     }
 }

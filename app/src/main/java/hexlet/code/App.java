@@ -9,22 +9,21 @@ import java.util.concurrent.Callable;
 
 @Command(name = "gendiff",
         mixinStandardHelpOptions = true,
-        version = "gendiff 1.0",
         description = "Compares two configuration files and shows a difference."
 )
 
 public class App implements Callable {
+    @Parameters(index = "0", description = "path to first file")
+    private String filepath1;
 
-    @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
-    private String format = "stylish";
+    @Parameters(index = "1", description = "path to second file")
+    private String filepath2;
 
-    @Parameters(paramLabel = "filepath1", description = "path to first file")
-    private String filePath1;
+    @Option(names = {"-f", "format"}, description = "output format [default: stylish]", defaultValue = "stylish")
+    private String format;
 
-    @Parameters(paramLabel = "filepath2", description = "path to second file")
-    private String filePath2;
+    @Option(names = {"-h", "--help"}, description = "Show this help message and exit.")
 
-    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Show this help message and exit.")
     private boolean helpRequested = false;
 
     @Option(names = {"-V", "--version"}, versionHelp = true, description = "Print version information and exit.")
@@ -39,10 +38,12 @@ public class App implements Callable {
     public Object call() throws Exception {
         if (helpRequested) {
             CommandLine.usage(this, System.out);
+            return null;
         } else if (versionRequested) {
             System.out.println("Version 1.0");
+            return null;
         } else {
-            System.out.println(Differ.generate(filePath1, filePath2));
+            System.out.println(Differ.generate(filepath1, filepath2, format));
         }
         return null;
     }
