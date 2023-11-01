@@ -20,7 +20,6 @@ public class Differ {
         } else if (extension.equals("yaml")) {
             parseFiles = Parser.parseYAML(filepath1, filepath2);
         }
-
         dataFile1 = parseFiles.get(0);
         dataFile2 = parseFiles.get(1);
         List<String> allKeys = new ArrayList<>();
@@ -29,27 +28,47 @@ public class Differ {
         Set<String> set = new HashSet<>(allKeys);
         List<String> allKeysSet = new ArrayList<>(set);
         Collections.sort(allKeysSet);
-        StringBuilder diff = new StringBuilder();
-        diff.append("{");
+
+        List<DifferElement> diff = new ArrayList<>();
         for (String key : allKeysSet) {
-            Object value1 = dataFile1.get(key);
-            Object value2 = dataFile2.get(key);
-            boolean elementRemoved = dataFile1.containsKey(key) && !dataFile2.containsKey(key);
-            boolean elementAdded = !dataFile1.containsKey(key) && dataFile2.containsKey(key);
-            boolean elementEqual = Objects.equals(value1, value2);
-            if (elementRemoved) {
-                diff.append("\n" + "  - " + key + ": " + value1);
-            } else if (elementAdded) {
-                diff.append("\n" + "  + " + key + ": " + value2);
-            } else if (!elementEqual) {
-                diff.append("\n" + "  - " + key + ": " + value1);
-                diff.append("\n" + "  + " + key + ": " + value2);
-            } else if (elementEqual) {
-                diff.append("\n" + "    " + key + ": " + value2);
-            }
+            DifferElement el = addNewElement(dataFile1, dataFile2, key);
+            diff.add(el);
         }
-        diff.append("\n");
-        diff.append("}");
-        return diff.toString();
+        String result = Formatter.solution(diff, format);
+        return result;
+    }
+
+    private static DifferElement addNewElement(Map<String, Object> dataFile1, Map<String, Object> dataFile2, String key) {
+        Object value1 = dataFile1.get(key);
+        Object value2 = dataFile2.get(key);
+        boolean elementRemoved = dataFile1.containsKey(key) && !dataFile2.containsKey(key);
+        boolean elementAdded = !dataFile1.containsKey(key) && dataFile2.containsKey(key);
+        boolean elementEqual = Objects.equals(value1, value2);
+        if (elementRemoved) {
+            return DifferElement.builder()
+                    .withChange("removed")
+                    .withKey(key)
+                    .withValueOld(value1)
+                    .build();
+        } else if (elementAdded) {
+            return DifferElement.builder()
+                    .withChange("added")
+                    .withKey(key)
+                    .withValueNew(value2)
+                    .build();
+        } else if (!elementEqual) {
+            return DifferElement.builder()
+                    .withChange("update")
+                    .withKey(key)
+                    .withValueOld(value1)
+                    .withValueNew(value2)
+                    .build();
+        } else {
+            return DifferElement.builder()
+                    .withChange("same")
+                    .withKey(key)
+                    .withValue(value1)
+                    .build();
+        }
     }
 }
