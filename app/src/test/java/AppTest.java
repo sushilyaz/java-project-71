@@ -13,8 +13,8 @@ public class AppTest {
     private static String resultJson;
     private static final String JSON_PATH_1 = "src/test/resources/file1.json";
     private static final String JSON_PATH_2 = "src/test/resources/file2.json";
-    private static final String YAML_PATH_1 = "src/test/resources/file1.yaml";
-    private static final String YAML_PATH_2 = "src/test/resources/file2.yaml";
+    private static final String YML_PATH_1 = "src/test/resources/file1.yml";
+    private static final String YML_PATH_2 = "src/test/resources/file2.yml";
 
     @BeforeAll
     public static void getResult() throws Exception {
@@ -33,13 +33,13 @@ public class AppTest {
     @Test
     public void testStylishYaml() throws Exception {
         String expected = resultStylish;
-        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "stylish");
+        String actual = Differ.generate(YML_PATH_1, YML_PATH_2, "stylish");
         assertEquals(expected, actual);
     }
     @Test
     public void testDefault() throws Exception {
         String expected = resultStylish;
-        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2);
+        String actual = Differ.generate(YML_PATH_1, YML_PATH_2);
         assertEquals(expected, actual);
     }
 
@@ -52,7 +52,7 @@ public class AppTest {
     @Test
     public void testPlainYaml() throws Exception {
         String expected = resultPlain;
-        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "plain");
+        String actual = Differ.generate(YML_PATH_1, YML_PATH_2, "plain");
         assertEquals(expected, actual);
     }
     @Test
@@ -64,7 +64,7 @@ public class AppTest {
     @Test
     public void testJsonYaml() throws Exception {
         String expected = resultJson;
-        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "json");
+        String actual = Differ.generate(YML_PATH_1, YML_PATH_2, "json");
         assertEquals(expected, actual);
     }
 }

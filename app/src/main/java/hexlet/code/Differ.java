@@ -17,10 +17,10 @@ public class Differ {
         List<Map<String, Object>> parseFiles = new ArrayList<>();
         if (extension.equals("json")) {
             parseFiles = Parser.parseJSON(filepath1, filepath2);
-        } else if (extension.equals("yaml")) {
+        } else if (extension.equals("yml")) {
             parseFiles = Parser.parseYAML(filepath1, filepath2);
         }
-        dataFile1 = parseFiles.get(1);
+        dataFile1 = parseFiles.get(0);
         dataFile2 = parseFiles.get(1);
         List<String> allKeys = new ArrayList<>();
         allKeys.addAll(dataFile1.keySet());
