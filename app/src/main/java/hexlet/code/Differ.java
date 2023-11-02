@@ -48,17 +48,17 @@ public class Differ {
             return DifferElement.builder()
                     .withChange("removed")
                     .withKey(key)
-                    .withValueOld(value1)
+                    .withValue(value1)
                     .build();
         } else if (elementAdded) {
             return DifferElement.builder()
                     .withChange("added")
                     .withKey(key)
-                    .withValueNew(value2)
+                    .withValue(value2)
                     .build();
         } else if (!elementEqual) {
             return DifferElement.builder()
-                    .withChange("update")
+                    .withChange("updated")
                     .withKey(key)
                     .withValueOld(value1)
                     .withValueNew(value2)

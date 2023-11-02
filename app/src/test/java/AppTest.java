@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AppTest {
     private static String resultStylish;
     private static String resultPlain;
+    private static String resultJson;
     private static final String JSON_PATH_1 = "src/test/resources/file1.json";
     private static final String JSON_PATH_2 = "src/test/resources/file2.json";
     private static final String YAML_PATH_1 = "src/test/resources/file1.yaml";
@@ -19,6 +20,7 @@ public class AppTest {
     public static void getResult() throws Exception {
         resultStylish = Files.readString(Paths.get("src/test/resources/ResultStylish").toAbsolutePath().normalize());
         resultPlain = Files.readString(Paths.get("src/test/resources/ResultPlain").toAbsolutePath().normalize());
+        resultJson = Files.readString(Paths.get("src/test/resources/ResultJson").toAbsolutePath().normalize());
     }
 
     @Test
@@ -45,6 +47,18 @@ public class AppTest {
     public void testPlainYaml() throws Exception {
         String expected = resultPlain;
         String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "plain");
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testJsonJson() throws Exception {
+        String expected = resultJson;
+        String actual = Differ.generate(JSON_PATH_1, JSON_PATH_2, "json");
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testJsonYaml() throws Exception {
+        String expected = resultJson;
+        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "json");
         assertEquals(expected, actual);
     }
 }

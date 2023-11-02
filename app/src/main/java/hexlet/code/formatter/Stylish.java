@@ -8,13 +8,13 @@ public class Stylish {
     public static String stylish(List<DifferElement> diff) {
         StringBuilder stylishFormat = new StringBuilder();
         for (DifferElement el : diff) {
-            if (el.getChange().equals("update")) {
+            if (el.getChange().equals("updated")) {
                 stylishFormat.append("  - " + el.getKey() + ": " + el.getValueOld() + "\n");
                 stylishFormat.append("  + " + el.getKey() + ": " + el.getValueNew() + "\n");
             } else if (el.getChange().equals("added")) {
-                stylishFormat.append("  + " + el.getKey() + ": " + el.getValueNew() + "\n");
+                stylishFormat.append("  + " + el.getKey() + ": " + el.getValue() + "\n");
             } else if (el.getChange().equals("removed")) {
-                stylishFormat.append("  - " + el.getKey() + ": " + el.getValueOld() + "\n");
+                stylishFormat.append("  - " + el.getKey() + ": " + el.getValue() + "\n");
             } else if (el.getChange().equals("same")) {
                 stylishFormat.append("    " + el.getKey() + ": " + el.getValue() + "\n");
             }

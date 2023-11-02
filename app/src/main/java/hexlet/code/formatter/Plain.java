@@ -9,14 +9,12 @@ public class Plain {
     public static String plain(List<DifferElement> diff) {
         StringBuilder plainFormat = new StringBuilder();
         for (DifferElement el : diff) {
-            Object old = el.getValueOld();
-            Object nevv = el.getValueNew();
-
-            if (el.getChange().equals("update")) {
+            Object val = el.getValue();
+            if (el.getChange().equals("updated")) {
                 plainFormat.append("Property '" + el.getKey() + "' was updated. From "
-                        + modifyValue(old) + " to " + modifyValue(nevv) + "\n");
+                        + modifyValue(el.getValueOld()) + " to " + modifyValue(el.getValueNew()) + "\n");
             } else if (el.getChange().equals("added")) {
-                plainFormat.append("Property '" + el.getKey() + "' was added with value: " + modifyValue(nevv) + "\n");
+                plainFormat.append("Property '" + el.getKey() + "' was added with value: " + modifyValue(val) + "\n");
             } else if (el.getChange().equals("removed")) {
                 plainFormat.append("Property '" + el.getKey() + "' was removed" + "\n");
             }
