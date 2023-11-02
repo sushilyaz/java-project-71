@@ -36,6 +36,12 @@ public class AppTest {
         String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2, "stylish");
         assertEquals(expected, actual);
     }
+    @Test
+    public void testDefault() throws Exception {
+        String expected = resultStylish;
+        String actual = Differ.generate(YAML_PATH_1, YAML_PATH_2);
+        assertEquals(expected, actual);
+    }
 
     @Test
     public void testPlainJson() throws Exception {

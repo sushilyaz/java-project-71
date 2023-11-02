@@ -37,6 +37,9 @@ public class Differ {
         String result = Formatter.solution(diff, format);
         return result;
     }
+    public static String generate(String filepath1, String filepath2) throws Exception {
+        return generate(filepath1, filepath2, "stylish");
+    }
 
     private static DifferElement addElement(Map<String, Object> dataFile1, Map<String, Object> dataFile2, String key) {
         Object value1 = dataFile1.get(key);
