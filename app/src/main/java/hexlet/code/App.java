@@ -35,7 +35,7 @@ public class App implements Callable {
     }
 
     @Override
-    public Object call() throws Exception {
+    public final Object call() throws Exception {
         if (helpRequested) {
             CommandLine.usage(this, System.out);
             return null;
