@@ -20,7 +20,7 @@ public class Differ {
         } else if (extension.equals("yaml")) {
             parseFiles = Parser.parseYAML(filepath1, filepath2);
         }
-        dataFile1 = parseFiles.get(0);
+        dataFile1 = parseFiles.get(1);
         dataFile2 = parseFiles.get(1);
         List<String> allKeys = new ArrayList<>();
         allKeys.addAll(dataFile1.keySet());

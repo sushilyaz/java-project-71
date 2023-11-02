@@ -46,9 +46,9 @@ public class Parser {
         String pathStr2 = Files.readString(path2);
 
         try {
-            dataFile1 = mapper.readValue(pathStr1, new TypeReference<Map<String, Object>>() {
+            dataFile1 = mapper.readValue(pathStr1, new TypeReference<>() {
             });
-            dataFile2 = mapper.readValue(pathStr2, new TypeReference<Map<String, Object>>() {
+            dataFile2 = mapper.readValue(pathStr2, new TypeReference<>() {
             });
         } catch (Exception e) {
             e.printStackTrace();
